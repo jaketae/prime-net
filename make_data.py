@@ -2,6 +2,7 @@ import argparse
 import json
 import os
 
+import numpy as np
 import sympy
 from sklearn.model_selection import train_test_split
 
@@ -12,9 +13,12 @@ def main(args):
     primes = list(sympy.primerange(2, max_num))
     composites = list(all_nums - set(primes))
     composites.sort()
+    width = len(np.binary_repr(max_num))
+    bin_primes = [np.binary_repr(p, width) for p in primes]
+    bin_composites = [np.binary_repr(c, width) for c in composites]
     for p_nums, c_nums, mode in zip(
-        split(primes, val_size, test_size),
-        split(composites, val_size, test_size),
+        split(bin_primes, val_size, test_size),
+        split(bin_composites, val_size, test_size),
         ("train", "val", "test"),
     ):
         directory = os.path.join("data", mode)

@@ -1,6 +1,7 @@
 import json
 import os
 
+import torch
 from torch.utils.data import DataLoader, Dataset, Subset
 
 
@@ -15,8 +16,23 @@ class NumberDataset(Dataset):
     def __getitem__(self, idx):
         len_primes = len(self.primes)
         if idx < len_primes:
-            return self.primes[idx], 1
-        return self.composites[idx - len_primes], 0
+            label = 1.0
+            data = self.primes[idx]
+        else:
+            label = 0.0
+            data = self.composites[idx - len_primes]
+        return torch.tensor([int(digit) for digit in data]), label
 
     def __len__(self):
         return len(self.primes) + len(self.composites)
+
+
+def make_loader(mode, batch_size):
+    assert mode in {
+        "train",
+        "val",
+        "test",
+    }, "`mode` must be one of 'train', 'val', or 'test'"
+    dataset = NumberDataset(mode)
+    data_loader = DataLoader(dataset, batch_size=batch_size, shuffle=True)
+    return data_loader
