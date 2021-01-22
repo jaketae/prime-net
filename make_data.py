@@ -17,7 +17,7 @@ def main(args):
         split(composites, val_size, test_size),
         ("train", "val", "test"),
     ):
-        directory = os.path.join(os.getcwd(), "data", mode)
+        directory = os.path.join("data", mode)
         if not os.path.exists(directory):
             os.mkdir(directory)
         with open(os.path.join(directory, "primes.txt"), "w") as p_file:
