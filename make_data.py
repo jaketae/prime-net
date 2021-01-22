@@ -1,8 +1,7 @@
 import argparse
+import json
 import os
 
-import numpy as np
-import pandas as pd
 import sympy
 from sklearn.model_selection import train_test_split
 
@@ -21,8 +20,10 @@ def main(args):
         directory = os.path.join(os.getcwd(), "data", mode)
         if not os.path.exists(directory):
             os.mkdir(directory)
-        pd.DataFrame(p_nums).to_csv(os.path.join(directory, "primes.csv"))
-        pd.DataFrame(c_nums).to_csv(os.path.join(directory, "composites.csv"))
+        with open(os.path.join(directory, "primes.txt"), "w") as p_file:
+            json.dump(p_nums, p_file)
+        with open(os.path.join(directory, "composites.txt"), "w") as c_file:
+            json.dump(c_nums, c_file)
 
 
 def split(nums, val_size, test_size):
