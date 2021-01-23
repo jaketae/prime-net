@@ -11,6 +11,8 @@ class PriSTM(pl.LightningModule):
     def __init__(self, embed_dim, hidden_size, num_layers, bidirectional):
         super().__init__()
         self.embed = nn.Embedding(3, embed_dim)
+        self.num_layers = num_layers
+        self.hidden_size = hidden_size
         self.lstm = nn.LSTM(
             input_size=embed_dim,
             hidden_size=hidden_size,
@@ -23,9 +25,17 @@ class PriSTM(pl.LightningModule):
         self.criterion = nn.BCEWithLogitsLoss(pos_weight=get_pos_weight())
 
     def forward(self, x):
+        batch_size = x.size(0)
         x = self.embed(x)
-        x, _ = self.lstm(x)
-        x = self.fc(x[:, -1, :])
+        _, (hidden, _) = self.lstm(x)
+        # hidden.shape = (batch, num layers * num directions, hidden_size)
+        hidden = hidden.transpose(0, 1)
+        # hidden.shape = (num_layers * num_directions, batch, hidden_size)
+        hidden = hidden.reshape(self.num_layers, -1, batch_size, self.hidden_size)
+        # hidden.shape = (num_layers, num_directions, batch, hidden_Size)
+        last_hidden = hidden[-1].transpose(0, 1).reshape(batch_size, -1)
+        # last_hidden.shape = (batch, num_directions * hidden_size)
+        x = self.fc(last_hidden)
         return torch.flatten(x)
 
     def configure_optimizers(self):
