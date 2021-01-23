@@ -10,7 +10,7 @@ from dataset import get_pos_weight
 class PriSTM(pl.LightningModule):
     def __init__(self, embed_dim, hidden_size, num_layers, bidirectional):
         super().__init__()
-        self.embed = nn.Embedding(2, embed_dim)
+        self.embed = nn.Embedding(3, embed_dim)
         self.lstm = nn.LSTM(
             input_size=embed_dim,
             hidden_size=hidden_size,
