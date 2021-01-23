@@ -1,7 +1,7 @@
 import pytorch_lightning as pl
 import torch
 import torch.nn.functional as F
-from sklearn.metrics import f1_score
+from sklearn.metrics import recall_score
 from torch import nn
 
 from dataset import get_pos_weight, make_loader
@@ -32,22 +32,19 @@ class PriSTM(pl.LightningModule):
         optimizer = torch.optim.Adam(self.parameters())
         return optimizer
 
-    def get_metrics(self, batch):
+    def training_step(self, batch, batch_idx):
         x, y_true = batch
         y_pred = self(x)
         loss = self.criterion(y_pred, y_true)
-        f1 = f1_score(
-            y_true.to(int).numpy(), (y_pred > 0.5).to(int).numpy(), zero_division=0
-        )
-        return loss, f1
-
-    def training_step(self, batch, batch_idx):
-        loss, _ = self.get_metrics(batch)
         return loss
 
     def validation_step(self, batch, batch_idx):
-        _, f1 = self.get_metrics(batch)
-        self.log("f1", f1)
+        x, y_true = batch
+        y_pred = self(x)
+        recall = recall_score(
+            y_true.to(int).numpy(), (y_pred > 0.5).to(int).numpy(), zero_division=0
+        )
+        self.log("recall", recall, on_step=False, on_epoch=True)
 
     def test_step(self, batch, batch_idx):
         return self.validation_step(batch, batch_idx)
