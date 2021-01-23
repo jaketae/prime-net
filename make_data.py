@@ -14,8 +14,8 @@ def main(args):
     composites = list(all_nums - set(primes))
     composites.sort()
     width = len(np.binary_repr(max_num))
-    bin_primes = [np.binary_repr(p, width) for p in primes]
-    bin_composites = [np.binary_repr(c, width) for c in composites]
+    bin_primes = [pad_binary(p, width) for p in primes]
+    bin_composites = [pad_binary(c, width) for c in composites]
     for p_nums, c_nums, mode in zip(
         split(bin_primes, val_size, test_size),
         split(bin_composites, val_size, test_size),
@@ -28,6 +28,14 @@ def main(args):
             json.dump(p_nums, p_file)
         with open(os.path.join(directory, "composites.txt"), "w") as c_file:
             json.dump(c_nums, c_file)
+
+
+def pad_binary(num, width):
+    binary = np.binary_repr(num)[::-1]
+    length = len(binary)
+    if length < width:
+        binary += "2" * (width - length)
+    return binary
 
 
 def split(nums, val_size, test_size):
