@@ -42,7 +42,9 @@ class PriSTM(pl.LightningModule):
         x, y_true = batch
         y_pred = self(x)
         recall = recall_score(
-            y_true.to(int).numpy(), (y_pred > 0.5).to(int).numpy(), zero_division=0
+            y_true.cpu().to(int).numpy(),
+            (y_pred > 0.5).cpu().to(int).numpy(),
+            zero_division=0,
         )
         self.log("recall", recall, on_step=False, on_epoch=True)
 
