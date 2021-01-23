@@ -27,12 +27,22 @@ class NumberDataset(Dataset):
         return len(self.primes) + len(self.composites)
 
 
-def make_loader(mode, batch_size):
+def get_pos_weight():
+    dataset = NumberDataset("train")
+    num_primes = len(dataset.primes)
+    num_composites = len(dataset.composites)
+    return torch.tensor(num_composites / num_primes)
+
+
+def make_loader(mode, batch_size=32):
     assert mode in {
         "train",
         "val",
         "test",
     }, "`mode` must be one of 'train', 'val', or 'test'"
     dataset = NumberDataset(mode)
-    data_loader = DataLoader(dataset, batch_size=batch_size, shuffle=True)
+    shuffle = mode == "train"
+    data_loader = DataLoader(
+        dataset, batch_size=batch_size, num_workers=os.cpu_count(), shuffle=shuffle
+    )
     return data_loader
