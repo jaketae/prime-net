@@ -4,7 +4,7 @@ import torch.nn.functional as F
 from sklearn.metrics import recall_score
 from torch import nn
 
-from dataset import get_pos_weight, make_loader
+from dataset import get_pos_weight
 
 
 class PriSTM(pl.LightningModule):
@@ -50,12 +50,3 @@ class PriSTM(pl.LightningModule):
 
     def test_step(self, batch, batch_idx):
         return self.validation_step(batch, batch_idx)
-
-    def train_dataloader(self):
-        return make_loader("train")
-
-    def val_dataloader(self):
-        return make_loader("val")
-
-    def test_dataloader(self):
-        return make_loader("test")
