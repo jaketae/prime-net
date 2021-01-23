@@ -31,7 +31,7 @@ def get_pos_weight():
     dataset = NumberDataset("train")
     num_primes = len(dataset.primes)
     num_composites = len(dataset.composites)
-    K = 100
+    K = 2
     return torch.tensor([num_composites / num_primes * K])
 
 

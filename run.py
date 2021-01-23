@@ -11,11 +11,7 @@ def main(args):
     model = PriSTM(
         args.embed_dim, args.hidden_size, args.num_layers, args.bidirectional
     )
-    trainer = Trainer(
-        gpus=args.gpus,
-        progress_bar_refresh_rate=20,
-        callbacks=[EarlyStopping(monitor="recall")],
-    )
+    trainer = Trainer(gpus=args.gpus, callbacks=[EarlyStopping(monitor="recall")],)
     batch_size = args.batch_size
     train_loader = make_loader("train", batch_size)
     val_loader = make_loader("val", batch_size)

@@ -46,7 +46,7 @@ class PriSTM(pl.LightningModule):
             (y_pred > 0.5).cpu().to(int).numpy(),
             zero_division=0,
         )
-        self.log("recall", recall, on_step=False, on_epoch=True)
+        self.log("recall", recall, prog_bar=True)
 
     def test_step(self, batch, batch_idx):
         return self.validation_step(batch, batch_idx)
