@@ -1,12 +1,12 @@
 # Prime Net
 
-This is a toy project in which I explore the feasability of detecting prime numbes through artifical neural networks, specifically RNNS.
+This is a mini project in which I explore the feasability of detecting prime numbes through artifical neural networks, specifically RNNS.
 
 ## Motivation
 
 Prime number detection and prediction are on-going endeavors in the mathematical circle. Communal projects such as the [Great Internet Mersenne Prime Search](https://www.mersenne.org) are manifestations of such efforts. Aside from the inherent intellectual value of discovering large primes, prime number detection has wide-ranging implications in various fields, such as crytograpy.
 
-Artifical neural networks are known to be universal function approximators. If we can consider the distribution of prime numbers as a step-wise function, where `f(x)` is 1 if `x` is prime and 0 otherwise, perhaps a neural network could be used to approximate it.
+Artifical neural networks are known to be [universal function approximators](https://en.wikipedia.org/wiki/Universal_approximation_theorem). If we can consider the distribution of prime numbers as a step-wise or a [Dirac delta](https://en.wikipedia.org/wiki/Dirac_delta_function)-esque spike function, in which `f(x)` is 1 if `x` is prime and 0 otherwise, perhaps a neural network could be used to approximate it.
 
 ## Model
 
@@ -28,7 +28,7 @@ To execute the pipeline, type
 python run.py
 ```
 
-Here is the full list of additional arguments.
+Below is the full list of additional arguments.
 
 ```
 usage: run.py [-h] [--embed_dim EMBED_DIM] [--hidden_size HIDDEN_SIZE]
